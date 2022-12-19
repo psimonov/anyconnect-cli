@@ -1,0 +1,54 @@
+#!/bin/bash
+
+VPN_HOSTNAME=<VPN hostname>
+VPN_USERNAME=<Your username>
+VPN_PASSWORD=<Your password>
+VPN_OTPLABEL=<The name of the keyring you created in the previous step, e.g. VPN>
+
+DISCONNECT=false
+STATUS=false
+HELP=false
+
+while (( $# >= 1 )); do
+    case $1 in
+    --disconnect) DISCONNECT=true;;
+    -d) DISCONNECT=true;;
+    --status) STATUS=true;;
+    -s) STATUS=true;;
+    help) HELP=true;;
+    *) break;
+    esac;
+    shift
+done
+
+if [ $DISCONNECT ==  true ];
+then
+
+# you may need to specify the actual path to your AnyConnect
+/opt/cisco/anyconnect/bin/vpn disconnect
+
+elif [ $STATUS ==  true ]
+then
+
+# you may need to specify the actual path to your AnyConnect
+/opt/cisco/anyconnect/bin/vpn status
+
+elif [ $HELP ==  true ]
+then
+
+echo "Available options: [-d (--disconnect)] OR [-s (--status)]";
+
+else
+
+VPN_OTPCODE=$(./otp-cli/otp-cli show -1 "${VPN_OTPLABEL}" | grep -E -o '([0-9]){6}')
+
+/opt/cisco/anyconnect/bin/vpn -s << EOF
+connect ${VPN_HOSTNAME}
+${VPN_USERNAME}
+${VPN_PASSWORD}
+${VPN_OTPCODE}
+EOF
+
+fi
+
+
