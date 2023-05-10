@@ -76,7 +76,7 @@ Show connection status:
 $ ./vpn -s
 ```
 
-Show available commands
+Show available commands:
 ```bash
 $ ./vpn help
 ```
