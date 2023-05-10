@@ -8,6 +8,7 @@ VPN_OTPLABEL=<The name of the keyring you created in the previous step, e.g. VPN
 DISCONNECT=false
 STATUS=false
 HELP=false
+TOKEN=false
 
 while (( $# >= 1 )); do
     case $1 in
@@ -15,6 +16,8 @@ while (( $# >= 1 )); do
     -d) DISCONNECT=true;;
     --status) STATUS=true;;
     -s) STATUS=true;;
+    --token) TOKEN=true;;
+    -t) TOKEN=true;;
     help) HELP=true;;
     *) break;
     esac;
@@ -33,10 +36,15 @@ then
 # you may need to specify the actual path to your AnyConnect
 /opt/cisco/anyconnect/bin/vpn status
 
+elif [ $TOKEN ==  true ]
+then
+
+./otp-cli/otp-cli show -1 -c "$VPN_OTPLABEL"
+
 elif [ $HELP ==  true ]
 then
 
-echo "Available options: [-d (--disconnect)] OR [-s (--status)]";
+echo "Available options: [-d (--disconnect)] OR [-s (--status)] OR [-t (--token)]";
 
 else
 
